@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	<div class="container-fluid bg-light p-5 text-center my-3">
+		<h1>Covid-19 Tracker</h1>
+		<h5 class="text-muted">Projet confinement !</h5>
+	</div>
+
+	<div class="container my-5">
+		{% set days_count = 0 %}
+		{% set days_count_prev = 0 %}
+
+		{% for key, value in data %}
+			{% set days_count = value|length - 1 %}
+			{% set days_count_prev = days_count - 1 %}
+		{% endfor %}
+		<!-- Cas totals-->
+
+		{% set total_confirmed   = 0 %}
+		{% set total_recovered   = 0 %}
+		{% set total_deaths   = 0 %}
+
+		{% set countbis  = 0 %}
+		{% for type, items in data %}
+			{% for key, value in items %}
+				{% set countbis  = countbis + 1 %}
+				{% if countbis == days_count %}
+					{% set total_confirmed   = total_confirmed + value.confirmed %}
+					{% set total_recovered   = total_recovered + value.recovered %}
+					{% set total_deaths   = total_deaths + value.deaths %}
+				{% endif %}
+			{% endfor %}
+			{% set countbis  = 0 %}
+		</tr>
+	{% endfor %}
+	<div class="row text-center">
+		<div class="col-4 text-warning">
+			<h5>Confirmés</h5>
+			{{total_confirmed}}
+		</div>
+		<div class="col-4 text-success">
+			<h5>Guérisons</h5>
+			{{total_recovered}}
+		</div>
+		<div class="col-4 text-danger">
+			<h5>Décès</h5>
+			{{total_deaths}}
+		</div>
+	</div>
+</div>
+
+<div class="container bg-light p-3 my-5 text-center">
+	<h5 class="text-info">"Mieux vaut santé que science."</h5>
+	<p class="text-muted">Restez chez vous !</p>
+</div>
+
+<div>
+
+	<table class="table">
+		<thead class="thead-dark">
+			<tr>
+				<th scope="col">Pays</th>
+				<th scope="col">Confirmés</th>
+				<th scope="col">Guérisons</th>
+				<th scope="col">Décès</th>
+			</tr>
+		</thead>
+		<!--Data d'Api - Infos sur Covid-19 -->
+		<tbody>
+
+			{% set increase  = 0 %}
+			{% set count  = 0 %}
+
+
+			<!-- Remplire les collones -->
+			{% for type, items in data %}
+				<tr>
+					<th scope="row">{{ type }}</th>
+					{% for key, value in items %}
+						{% set count  = count + 1 %}
+						{% if count == days_count %}
+							<td>{{ value.confirmed }}</td>
+							<td>{{ value.recovered }}</td>
+							<td>{{ value.deaths }}</td>
+						{% endif %}
+					{% endfor %}
+					{% set count  = 0 %}
+				</tr>
+			{% endfor %}
+
+			{% for key, value in data %}{% endfor %}
+
+
+		</tbody>
+	</tbody>
+</table></div><footer class="footer mt-auto py-3 bg-light">
+<div class="container text-center">
+	<span class="text-muted">Copyright &copy;2020,
+		<a href="https://www.linkedin.com/in/aman-kumar-1bb839199/" target="_blank">KUMAR Aman</a>
+	</span>
+</div></footer>{% endblock %}
